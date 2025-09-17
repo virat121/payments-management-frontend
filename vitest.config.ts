@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
+import tailwindcss from '@tailwindcss/vite'
 import viteConfig from './vite.config'
 
 export default mergeConfig(
