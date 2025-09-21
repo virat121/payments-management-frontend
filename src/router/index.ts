@@ -8,7 +8,7 @@ import PaymentDetail from '@/views/PaymentDetail.vue'
 import PaymentForm from '@/views/PaymentForm.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.NODE_ENV === 'production' ? '/payments-management-frontend/' : '/'),
   routes: [
     {
       path: '/',
