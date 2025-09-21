@@ -7,32 +7,26 @@
         <p class="text-gray-600">Revenue, expenses, and profit analysis</p>
       </div>
       
-      <div class="flex items-center space-x-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
         <!-- Period Selector -->
-        <select
+        <Select
           v-model="selectedPeriod"
-          class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          :options="periodOptions"
+          placeholder="Select period"
           @change="updatePeriod"
-        >
-          <option value="all">All Time</option>
-          <option value="year">Last Year</option>
-          <option value="quarter">Last Quarter</option>
-          <option value="month">Last Month</option>
-        </select>
+          class="w-full sm:w-48"
+        />
         
         <!-- Currency Converter -->
-        <div class="flex items-center space-x-2">
-          <span class="text-sm text-gray-600">Convert to:</span>
-          <select
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <span class="text-sm font-medium text-gray-600 whitespace-nowrap">Convert to:</span>
+          <Select
             v-model="displayCurrency"
-            class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            :options="currencyOptions"
+            placeholder="Select currency"
             @change="convertCurrency"
-          >
-            <option value="USD">USD</option>
-            <option value="INR">INR</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-          </select>
+            class="w-full sm:w-32"
+          />
         </div>
       </div>
     </div>
@@ -40,74 +34,107 @@
     <!-- Financial Overview Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Total Revenue -->
-      <BaseCard>
+      <BaseCard variant="elevated" class="overflow-hidden">
         <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-green-100 rounded-lg">
-              <ArrowUpIcon class="h-6 w-6 text-green-600" />
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p class="text-2xl font-bold text-gray-900">
-                {{ formatCurrency(convertedRevenue, displayCurrency) }}
-              </p>
-              <p class="text-sm text-green-600">+{{ revenueGrowth }}% vs last period</p>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center flex-1 min-w-0">
+              <div class="p-3 bg-gradient-to-br from-success-100 to-success-200 rounded-xl shadow-glow-success">
+                <ArrowUpIcon class="h-6 w-6 text-success-600" />
+              </div>
+              <div class="ml-4 flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-600 mb-1">Total Revenue</p>
+                <div class="group relative">
+                  <p class="text-sm sm:text-base font-bold text-gray-900 break-words" 
+                     :title="currencyService.formatCurrency(convertedRevenue, displayCurrency)">
+                    {{ formatCurrency(convertedRevenue, displayCurrency) }}
+                  </p>
+                  <!-- Full value tooltip on hover -->
+                  <div class="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                    {{ currencyService.formatCurrency(convertedRevenue, displayCurrency) }}
+                    <div class="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
+                <p class="text-xs text-success-600 font-medium">+{{ revenueGrowth }}% vs last period</p>
+              </div>
             </div>
           </div>
         </div>
       </BaseCard>
 
       <!-- Total Expenses -->
-      <BaseCard>
+      <BaseCard variant="elevated" class="overflow-hidden">
         <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-red-100 rounded-lg">
-              <ArrowDownIcon class="h-6 w-6 text-red-600" />
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Total Expenses</p>
-              <p class="text-2xl font-bold text-gray-900">
-                {{ formatCurrency(convertedExpenses, displayCurrency) }}
-              </p>
-              <p class="text-sm text-red-600">+{{ expenseGrowth }}% vs last period</p>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center flex-1 min-w-0">
+              <div class="p-3 bg-gradient-to-br from-error-100 to-error-200 rounded-xl shadow-glow-error">
+                <ArrowDownIcon class="h-6 w-6 text-error-600" />
+              </div>
+              <div class="ml-4 flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-600 mb-1">Total Expenses</p>
+                <div class="group relative">
+                  <p class="text-sm sm:text-base font-bold text-gray-900 break-words" 
+                     :title="currencyService.formatCurrency(convertedExpenses, displayCurrency)">
+                    {{ formatCurrency(convertedExpenses, displayCurrency) }}
+                  </p>
+                  <!-- Full value tooltip on hover -->
+                  <div class="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                    {{ currencyService.formatCurrency(convertedExpenses, displayCurrency) }}
+                    <div class="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
+                <p class="text-xs text-error-600 font-medium">+{{ expenseGrowth }}% vs last period</p>
+              </div>
             </div>
           </div>
         </div>
       </BaseCard>
 
       <!-- Net Profit -->
-      <BaseCard>
+      <BaseCard variant="elevated" class="overflow-hidden">
         <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-blue-100 rounded-lg">
-              <CurrencyDollarIcon class="h-6 w-6 text-blue-600" />
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Net Profit</p>
-              <p class="text-2xl font-bold" :class="convertedProfit >= 0 ? 'text-green-600' : 'text-red-600'">
-                {{ formatCurrency(convertedProfit, displayCurrency) }}
-              </p>
-              <p class="text-sm" :class="profitGrowth >= 0 ? 'text-green-600' : 'text-red-600'">
-                {{ profitGrowth >= 0 ? '+' : '' }}{{ profitGrowth }}% vs last period
-              </p>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center flex-1 min-w-0">
+              <div class="p-3 bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl shadow-glow">
+                <CurrencyDollarIcon class="h-6 w-6 text-primary-600" />
+              </div>
+              <div class="ml-4 flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-600 mb-1">Net Profit</p>
+                <div class="group relative">
+                  <p class="text-sm sm:text-base font-bold break-words" 
+                     :class="convertedProfit >= 0 ? 'text-success-600' : 'text-error-600'"
+                     :title="currencyService.formatCurrency(convertedProfit, displayCurrency)">
+                    {{ formatCurrency(convertedProfit, displayCurrency) }}
+                  </p>
+                  <!-- Full value tooltip on hover -->
+                  <div class="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                    {{ currencyService.formatCurrency(convertedProfit, displayCurrency) }}
+                    <div class="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </div>
+                <p class="text-xs font-medium" :class="profitGrowth >= 0 ? 'text-success-600' : 'text-error-600'">
+                  {{ profitGrowth >= 0 ? '+' : '' }}{{ profitGrowth }}% vs last period
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </BaseCard>
 
       <!-- Profit Margin -->
-      <BaseCard>
+      <BaseCard variant="elevated" class="overflow-hidden">
         <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-purple-100 rounded-lg">
-              <ChartBarIcon class="h-6 w-6 text-purple-600" />
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Profit Margin</p>
-              <p class="text-2xl font-bold" :class="profitMargin >= 0 ? 'text-green-600' : 'text-red-600'">
-                {{ profitMargin.toFixed(1) }}%
-              </p>
-              <p class="text-sm text-gray-500">Revenue efficiency</p>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center flex-1 min-w-0">
+              <div class="p-3 bg-gradient-to-br from-accent-100 to-accent-200 rounded-xl shadow-glow">
+                <ChartBarIcon class="h-6 w-6 text-accent-600" />
+              </div>
+              <div class="ml-4 flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-600 mb-1">Profit Margin</p>
+                <p class="text-lg sm:text-xl font-bold" :class="profitMargin >= 0 ? 'text-success-600' : 'text-error-600'">
+                  {{ profitMargin.toFixed(1) }}%
+                </p>
+                <p class="text-xs text-gray-500 font-medium">Revenue efficiency</p>
+              </div>
             </div>
           </div>
         </div>
@@ -242,6 +269,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { Currency } from '@/types'
 import BaseCard from '@/components/BaseCard.vue'
+import Select from '@/components/Select.vue'
 import currencyService from '@/services/currencyService'
 import {
   ArrowUpIcon,
@@ -253,6 +281,21 @@ import {
 const store = useStore()
 const selectedPeriod = ref('all')
 const displayCurrency = ref<Currency>(Currency.USD)
+
+// Options for Select components
+const periodOptions = [
+  { value: 'all', label: 'All Time' },
+  { value: 'year', label: 'Last Year' },
+  { value: 'quarter', label: 'Last Quarter' },
+  { value: 'month', label: 'Last Month' }
+]
+
+const currencyOptions = [
+  { value: Currency.USD, label: 'USD - US Dollar' },
+  { value: Currency.INR, label: 'INR - Indian Rupee' },
+  { value: Currency.EUR, label: 'EUR - Euro' },
+  { value: Currency.GBP, label: 'GBP - British Pound' }
+]
 
 // Computed properties for financial data
 const financialSummary = computed(() => store.getters['payments/getFinancialSummary'](selectedPeriod.value))
@@ -282,7 +325,30 @@ const highValuePayments = computed(() => {
 
 // Helper functions
 function formatCurrency(amount: number, currency: Currency): string {
-  return currencyService.formatCurrency(amount, currency)
+  // Format large numbers with K, M, B suffixes for better readability
+  const formatLargeNumber = (num: number): string => {
+    const absNum = Math.abs(num)
+    
+    if (absNum >= 1e9) {
+      return (num / 1e9).toFixed(1) + 'B'
+    } else if (absNum >= 1e6) {
+      return (num / 1e6).toFixed(1) + 'M'
+    } else if (absNum >= 1e3) {
+      return (num / 1e3).toFixed(1) + 'K'
+    } else if (absNum >= 1) {
+      return num.toFixed(0)
+    } else {
+      return num.toFixed(2)
+    }
+  }
+
+  const formattedAmount = formatLargeNumber(amount)
+  const symbol = currency === Currency.USD ? '$' : 
+                 currency === Currency.EUR ? '€' : 
+                 currency === Currency.GBP ? '£' : 
+                 currency === Currency.INR ? '₹' : '$'
+  
+  return `${symbol}${formattedAmount}`
 }
 
 function formatCategory(category: string): string {

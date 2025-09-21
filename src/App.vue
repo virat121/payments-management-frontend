@@ -1,25 +1,32 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-100">
-    <div class="flex h-screen">
-      <!-- Sidebar -->
+  <div id="app" class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Desktop Sidebar - Fixed positioned -->
+    <div class="hidden lg:block fixed inset-y-0 left-0 z-20">
       <Sidebar ref="sidebarRef" />
+    </div>
 
-      <!-- Main Content -->
-      <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- Navbar -->
-        <Navbar @toggle-sidebar="toggleSidebar" />
+    <!-- Main Content - With proper left margin for desktop -->
+    <div class="lg:ml-64 flex flex-col min-h-screen">
+      <!-- Navbar -->
+      <Navbar @toggle-sidebar="toggleSidebar" />
 
-        <!-- Page Content -->
-        <main class="flex-1 overflow-auto">
-          <div class="container mx-auto px-6 py-8">
+      <!-- Page Content -->
+      <main class="flex-1 overflow-auto bg-gray-50/50">
+        <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8">
+          <div class="animate-fade-in-up">
             <router-view />
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="lg:hidden">
+      <Sidebar ref="sidebarRef" />
     </div>
 
     <!-- Toast Container -->
-    <Toast ref="toastRef" />
+    <Toast ref="toastRef" title="System Ready" />
   </div>
 </template>
 

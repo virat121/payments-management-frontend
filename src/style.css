@@ -6,7 +6,7 @@
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
+
   color-scheme: light;
   color: #111827;
   background-color: #f9fafb;
@@ -22,7 +22,36 @@
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Custom scrollbar */
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  #app {
+    font-size: 14px;
+  }
+
+  /* Ensure proper touch targets */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Better mobile spacing */
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -38,6 +67,34 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Select dropdown styling */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: none !important;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+/* Ensure select options have proper styling */
+select option {
+  padding: 8px 12px;
+  background-color: white;
+  color: #374151;
+}
+
+select option:hover {
+  background-color: #f3f4f6;
+}
+
+select option:checked {
+  background-color: #3b82f6;
+  color: white;
 }
 
 /* Smooth transitions for route changes */
@@ -63,4 +120,78 @@ select:focus-visible {
 .loading {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Better mobile cards */
+  .mobile-card {
+    margin: 0.5rem;
+    border-radius: 1rem;
+  }
+
+  /* Mobile-friendly text sizes */
+  .mobile-text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .mobile-text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  /* Touch-friendly buttons */
+  .mobile-button {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    border-radius: 0.75rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tablet-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1024px) {
+  .desktop-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .high-dpi-text {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Dark mode support (for future implementation) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

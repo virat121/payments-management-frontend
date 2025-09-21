@@ -55,7 +55,11 @@ const getters = {
       filtered = filtered.filter(payment => new Date(payment.createdAt) <= new Date(state.dateToFilter))
     }
 
-    return filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    return filtered.sort((a, b) => {
+      const idA = parseInt(a.id) || 0
+      const idB = parseInt(b.id) || 0
+      return idB - idA 
+    })
   },
 
   paginatedPayments: (state: PaymentState, getters: any) => {
@@ -71,7 +75,12 @@ const getters = {
 
   recentPayments: (state: PaymentState) => {
     return state.payments
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice()
+      .sort((a, b) => {
+        const idA = parseInt(a.id) || 0
+        const idB = parseInt(b.id) || 0
+        return idB - idA 
+      })
       .slice(0, 5)
   },
 
@@ -278,6 +287,7 @@ const actions = {
 
     // Generate sequential ID
     const nextId = Math.max(...state.payments.map((p: Payment) => parseInt(p.id) || 0), 0) + 1
+    const now = new Date().toISOString()
 
     const newPayment: Payment = {
       id: nextId.toString(),
@@ -289,9 +299,10 @@ const actions = {
       payerId: paymentData.payerId,
       payeeId: paymentData.payeeId,
       notes: paymentData.notes,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: now,
+      updatedAt: now
     }
+
 
     commit('ADD_PAYMENT', newPayment)
     saveToStorage({ state })
