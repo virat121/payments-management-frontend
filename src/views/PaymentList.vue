@@ -141,7 +141,7 @@
 
     <!-- Delete Confirmation Dialog -->
     <ConfirmDialog
-      :show="showDeleteDialog"
+      :isOpen="showDeleteDialog"
       :title="`Delete Payment #${paymentToDelete?.id.slice(-6)}`"
       message="Are you sure you want to delete this payment? This action cannot be undone."
       type="danger"

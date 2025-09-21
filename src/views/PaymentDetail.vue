@@ -188,7 +188,7 @@
 
     <!-- Confirmation Dialogs -->
     <ConfirmDialog
-      :show="showCancelDialog"
+      :isOpen="showCancelDialog"
       title="Cancel Payment"
       message="Are you sure you want to cancel this payment? This action cannot be undone."
       type="warning"
@@ -198,7 +198,7 @@
     />
 
     <ConfirmDialog
-      :show="showDeleteDialog"
+      :isOpen="showDeleteDialog"
       title="Delete Payment"
       message="Are you sure you want to delete this payment? This action cannot be undone."
       type="danger"

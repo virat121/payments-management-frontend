@@ -2,7 +2,7 @@ import { Currency, CurrencyRate } from '@/types'
 
 class CurrencyService {
   private rates: Map<string, CurrencyRate> = new Map()
-  private readonly API_KEY = 'your-api-key-here' // Replace with actual API key
+  // private readonly API_KEY = 'your-api-key-here' // Replace with actual API key
   private readonly BASE_URL = 'https://api.exchangerate-api.com/v4/latest'
 
   // Fallback rates (updated periodically)

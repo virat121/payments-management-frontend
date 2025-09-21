@@ -57,7 +57,7 @@ describe('PaymentDetail - Essential Tests', () => {
                 amount: 150.75,
                 currency: 'USD',
                 status: PaymentStatus.COMPLETED,
-                category: PaymentCategory.INVOICE,
+                category: PaymentCategory.CLIENT_INVOICE,
                 payerId: '1',
                 payeeId: '2',
                 notes: 'Test payment for services',

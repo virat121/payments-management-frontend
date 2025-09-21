@@ -40,7 +40,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Bars3Icon } from '@heroicons/vue/24/outline'
 import SidebarContent from './SidebarContent.vue'
 
 const isMobileMenuOpen = ref(false)

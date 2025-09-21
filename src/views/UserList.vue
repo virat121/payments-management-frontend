@@ -100,7 +100,7 @@
     <!-- Delete confirmation dialog -->
     <ConfirmDialog
       v-if="userToDelete"
-      :open="!!userToDelete"
+      :isOpen="!!userToDelete"
       title="Delete User"
       :message="`Are you sure you want to delete ${userToDelete.name}? This action cannot be undone.`"
       confirm-text="Delete"

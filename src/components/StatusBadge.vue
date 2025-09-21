@@ -31,7 +31,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const badgeClasses = computed(() => {
-  const baseClasses = 'font-medium'
   
   if (props.type === 'user') {
     return props.status === 'active'

@@ -70,7 +70,7 @@ describe('PaymentList - Essential Tests', () => {
                 amount: 250.50,
                 currency: 'USD',
                 status: PaymentStatus.PENDING,
-                category: PaymentCategory.INVOICE,
+                category: PaymentCategory.CLIENT_INVOICE,
                 payerId: '2',
                 payeeId: '1',
                 notes: 'Test payment 2',
