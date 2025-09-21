@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:github": "cross-env VITE_BASE_URL=/payments-management-frontend/ vite build",
     "build:vercel": "cross-env VITE_BASE_URL=/ vite build",
+    "vercel-build": "npm run build:vercel",
     "build:check": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest",
