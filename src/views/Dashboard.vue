@@ -79,7 +79,7 @@
             <dl>
               <dt class="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Amount</dt>
               <dd class="text-xl sm:text-2xl font-bold text-gray-900">
-                ${{ stats.totalAmount.toLocaleString() }}
+                {{ formatLargeCurrency(stats.totalAmount, 'USD' as any) }}
               </dd>
               <dd class="text-xs text-success-600 font-medium hidden sm:block">+15% from last month</dd>
             </dl>
@@ -88,107 +88,104 @@
       </BaseCard>
     </div>
 
-    <!-- Charts and Recent Payments -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
-      <!-- Payment Status Chart -->
-      <BaseCard variant="elevated" class="overflow-hidden">
-        <div class="p-4 sm:p-6">
-          <div class="flex items-center justify-between mb-4 sm:mb-6">
-            <h3 class="text-lg sm:text-xl font-bold text-gray-900">Payment Status Overview</h3>
-            <div class="w-6 h-6 sm:w-8 sm:h-8 bg-primary-100 rounded-lg flex items-center justify-center">
-              <ChartBarIcon class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
-            </div>
-          </div>
-          <div class="h-64 sm:h-80">
-            <canvas ref="statusChartRef"></canvas>
+    <!-- Payment Status Chart -->
+    <BaseCard variant="elevated" class="overflow-hidden">
+      <div class="p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <h3 class="text-lg sm:text-xl font-bold text-gray-900">Payment Status Overview</h3>
+          <div class="w-6 h-6 sm:w-8 sm:h-8 bg-primary-100 rounded-lg flex items-center justify-center">
+            <ChartBarIcon class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
           </div>
         </div>
-      </BaseCard>
+        <div class="h-64 sm:h-80">
+          <canvas ref="statusChartRef"></canvas>
+        </div>
+      </div>
+    </BaseCard>
 
-      <!-- Recent Payments -->
-      <BaseCard variant="elevated" class="overflow-hidden">
-        <div class="p-4 sm:p-6">
-          <div class="flex items-center justify-between mb-4 sm:mb-6">
-            <h3 class="text-lg sm:text-xl font-bold text-gray-900">Recent Payments</h3>
-            <router-link
-              to="/payments"
-              class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-xl transition-all duration-200"
-            >
-              View all
-              <ArrowRightIcon class="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
-            </router-link>
-          </div>
-          
-          <div class="space-y-3 sm:space-y-4">
-            <div
-              v-for="payment in recentPayments"
-              :key="payment.id"
-              class="p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200 group"
-            >
-              <!-- Mobile Layout: Stacked -->
-              <div class="sm:hidden space-y-2">
-                <!-- Top Row: Amount and Status -->
-                <div class="flex items-center justify-between">
-                  <div class="text-base font-bold text-gray-900">
-                    ${{ payment.amount.toFixed(2) }}
-                  </div>
-                  <StatusBadge :status="payment.status" />
+    <!-- Recent Payments -->
+    <BaseCard variant="elevated" class="overflow-hidden">
+      <div class="p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <h3 class="text-lg sm:text-xl font-bold text-gray-900">Recent Payments</h3>
+          <router-link
+            to="/payments"
+            class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-xl transition-all duration-200"
+          >
+            View all
+            <ArrowRightIcon class="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+          </router-link>
+        </div>
+        
+        <div class="space-y-3 sm:space-y-4">
+          <div
+            v-for="payment in recentPayments"
+            :key="payment.id"
+            class="p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200 group"
+          >
+            <!-- Mobile Layout: Stacked -->
+            <div class="sm:hidden space-y-2">
+              <!-- Top Row: Amount and Status -->
+              <div class="flex items-center justify-between">
+                <div class="text-base font-bold text-gray-900">
+                  {{ formatCurrencyAmount(payment.amount, payment.currency) }}
                 </div>
-                
-                <!-- Middle Row: Participants -->
-                <div class="text-xs text-gray-600">
-                  {{ getUserName(payment.payerId) }} → {{ getUserName(payment.payeeId) }}
-                </div>
-                
-                <!-- Bottom Row: Date and Time -->
-                <div class="flex items-center justify-between text-xs text-gray-500">
-                  <span>{{ formatDate(payment.createdAt) }}</span>
-                  <span class="flex items-center">
-                    <ClockIcon class="w-3 h-3 mr-1" />
-                    {{ formatTime(payment.createdAt) }}
-                  </span>
-                </div>
+                <StatusBadge :status="payment.status" />
               </div>
+              
+              <!-- Middle Row: Participants -->
+              <div class="text-xs text-gray-600">
+                {{ getUserName(payment.payerId) }} → {{ getUserName(payment.payeeId) }}
+              </div>
+              
+              <!-- Bottom Row: Date and Time -->
+              <div class="flex items-center justify-between text-xs text-gray-500">
+                <span>{{ formatDate(payment.createdAt) }}</span>
+                <span class="flex items-center">
+                  <ClockIcon class="w-3 h-3 mr-1" />
+                  {{ formatTime(payment.createdAt) }}
+                </span>
+              </div>
+            </div>
 
-              <!-- Desktop Layout: Side by Side -->
-              <div class="hidden sm:flex items-center justify-between">
-                <div class="flex-1 min-w-0">
+            <!-- Desktop Layout: Side by Side -->
+            <div class="hidden sm:flex items-center justify-between">
+              <div class="flex-1 min-w-0">
                   <div class="flex items-center space-x-3 mb-2">
                     <div class="text-lg font-bold text-gray-900">
-                      ${{ payment.amount.toFixed(2) }}
+                      {{ formatCurrencyAmount(payment.amount, payment.currency) }}
                     </div>
-                    <StatusBadge :status="payment.status" />
-                  </div>
-                  <div class="text-sm text-gray-600 truncate">
-                    {{ getUserName(payment.payerId) }} → {{ getUserName(payment.payeeId) }}
-                  </div>
-                  <div class="text-xs text-gray-500 mt-1">
-                    {{ payment.category.replace('_', ' ').toUpperCase() }}
-                  </div>
+                  <StatusBadge :status="payment.status" />
                 </div>
-                <div class="text-right flex-shrink-0 ml-4">
-                  <div class="text-sm font-medium text-gray-900">
-                    {{ formatDate(payment.createdAt) }}
-                  </div>
-                  <div class="text-xs text-gray-500 flex items-center justify-end">
-                    <ClockIcon class="w-3 h-3 mr-1" />
-                    {{ formatTime(payment.createdAt) }}
-                  </div>
+                <div class="text-sm text-gray-600 truncate">
+                  {{ getUserName(payment.payerId) }} → {{ getUserName(payment.payeeId) }}
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                  {{ payment.category.replace('_', ' ').toUpperCase() }}
+                </div>
+              </div>
+              <div class="text-right flex-shrink-0 ml-4">
+                <div class="text-sm font-medium text-gray-900">
+                  {{ formatDate(payment.createdAt) }}
+                </div>
+                <div class="text-xs text-gray-500 flex items-center justify-end">
+                  <ClockIcon class="w-3 h-3 mr-1" />
+                  {{ formatTime(payment.createdAt) }}
                 </div>
               </div>
             </div>
           </div>
-
-          <div v-if="recentPayments.length === 0" class="text-center py-8 sm:py-12">
-            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
-              <CreditCardIcon class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
-            </div>
-            <div class="text-gray-500 font-medium text-sm sm:text-base">No recent payments</div>
-            <div class="text-xs sm:text-sm text-gray-400 mt-1">Payments will appear here once created</div>
-          </div>
         </div>
-      </BaseCard>
-    </div>
+
+        <div v-if="recentPayments.length === 0" class="text-center py-8 sm:py-12">
+          <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <CreditCardIcon class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+          </div>
+          <div class="text-gray-500 font-medium text-sm sm:text-base">No recent payments</div>
+          <div class="text-xs sm:text-sm text-gray-400 mt-1">Payments will appear here once created</div>
+        </div>
+      </div>
+    </BaseCard>
   </div>
 </template>
 
@@ -199,6 +196,7 @@ import { useStore } from 'vuex'
 import { PaymentStatus } from '@/types'
 import BaseCard from '@/components/BaseCard.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
+import { formatCurrencyAmount, formatLargeCurrency } from '@/utils/currency'
 import {
   UsersIcon,
   CreditCardIcon,
@@ -221,6 +219,7 @@ const stats = computed(() => ({
   failedPayments: store.getters['payments/paymentsByStatus'][PaymentStatus.FAILED] || 0,
   totalAmount: store.getters['payments/totalAmount']
 }))
+
 
 const recentPayments = computed(() => store.getters['payments/recentPayments'])
 

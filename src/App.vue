@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div id="app" class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
     <!-- Desktop Sidebar - Fixed positioned -->
     <div class="hidden lg:block fixed inset-y-0 left-0 z-20">
       <Sidebar ref="sidebarRef" />
@@ -11,7 +11,7 @@
       <Navbar @toggle-sidebar="toggleSidebar" />
 
       <!-- Page Content -->
-      <main class="flex-1 overflow-auto bg-gray-50/50">
+            <main class="flex-1 overflow-auto bg-slate-50/30">
         <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8">
           <div class="animate-fade-in-up">
             <router-view />

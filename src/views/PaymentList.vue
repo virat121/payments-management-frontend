@@ -64,7 +64,7 @@
 
       <template #cell-amount="{ item }">
         <div class="text-sm font-medium text-gray-900">
-          ${{ item.amount.toFixed(2) }} {{ item.currency }}
+          {{ formatCurrencyWithCode(item.amount, item.currency) }}
         </div>
       </template>
 
@@ -155,13 +155,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useStore } from 'vuex'
-import { PaymentStatus, PaymentCategory, PaymentDirection, Currency, type Payment } from '@/types'
+import { PaymentStatus, PaymentCategory, PaymentDirection, type Payment } from '@/types'
 import BaseCard from '@/components/BaseCard.vue'
 import BaseTable from '@/components/BaseTable.vue'
 import Select from '@/components/Select.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import Pagination from '@/components/Pagination.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { formatCurrencyWithCode } from '@/utils/currency'
 import {
   PlusIcon,
   EyeIcon,
@@ -225,10 +226,12 @@ const categoryOptions = [
 ]
 
 function formatCategory(category: PaymentCategory) {
+  if (!category) return ''
   return category.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
 }
 
 function formatDirection(direction: PaymentDirection) {
+  if (!direction) return ''
   return direction.charAt(0).toUpperCase() + direction.slice(1)
 }
 

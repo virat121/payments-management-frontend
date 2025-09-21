@@ -26,14 +26,6 @@
           Edit
         </router-link>
         
-        <button
-          v-if="payment.status === PaymentStatus.COMPLETED"
-          class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 transition-colors duration-200"
-          @click="confirmRefund"
-        >
-          <ArrowUturnLeftIcon class="h-4 w-4 mr-2" />
-          Refund
-        </button>
         
         <button
           v-if="payment.status === PaymentStatus.PENDING"
@@ -69,7 +61,7 @@
               <div>
                 <label class="text-sm font-medium text-gray-500">Amount</label>
                 <div class="mt-1 text-2xl font-semibold text-gray-900">
-                  ${{ payment.amount.toFixed(2) }} {{ payment.currency }}
+                  {{ formatCurrencyWithCode(payment.amount, payment.currency) }}
                 </div>
               </div>
               
@@ -120,14 +112,6 @@
                 <div class="text-sm text-gray-500">Payer</div>
               </div>
               
-              <div class="flex items-center justify-center md:hidden">
-                <ArrowDownIcon class="h-6 w-6 text-gray-400" />
-              </div>
-              
-              <div class="hidden md:flex items-center justify-center">
-                <ArrowRightIcon class="h-6 w-6 text-gray-400" />
-              </div>
-              
               <div class="text-center">
                 <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3">
                   <span class="text-lg font-semibold text-green-600">
@@ -173,6 +157,7 @@
                   </div>
                 </li>
                 
+                <!-- Updated Timeline Entry - Only show if there are actual updates -->
                 <li v-if="payment.updatedAt !== payment.createdAt" class="relative">
                   <div class="relative flex items-start space-x-3">
                     <div>
@@ -203,16 +188,6 @@
 
     <!-- Confirmation Dialogs -->
     <ConfirmDialog
-      :show="showRefundDialog"
-      title="Refund Payment"
-      message="Are you sure you want to refund this payment? This action will change the status to refunded."
-      type="warning"
-      confirm-text="Refund"
-      @confirm="handleRefund"
-      @cancel="cancelRefund"
-    />
-
-    <ConfirmDialog
       :show="showCancelDialog"
       title="Cancel Payment"
       message="Are you sure you want to cancel this payment? This action cannot be undone."
@@ -242,15 +217,13 @@ import { PaymentStatus } from '@/types'
 import BaseCard from '@/components/BaseCard.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { formatCurrencyWithCode } from '@/utils/currency'
 import {
   ArrowLeftIcon,
   PencilIcon,
   TrashIcon,
   XMarkIcon,
-  ArrowUturnLeftIcon,
-  PlusIcon,
-  ArrowRightIcon,
-  ArrowDownIcon
+  PlusIcon
 } from '@heroicons/vue/24/outline'
 
 interface Props {
@@ -261,7 +234,6 @@ const props = defineProps<Props>()
 const router = useRouter()
 const store = useStore()
 
-const showRefundDialog = ref(false)
 const showCancelDialog = ref(false)
 const showDeleteDialog = ref(false)
 
@@ -284,31 +256,13 @@ function getInitials(name: string) {
 }
 
 function formatCategory(category: string) {
+  if (!category) return ''
   return category.charAt(0).toUpperCase() + category.slice(1)
 }
 
 function formatDateTime(dateString: string) {
   const date = new Date(dateString)
   return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
-
-function confirmRefund() {
-  showRefundDialog.value = true
-}
-
-function cancelRefund() {
-  showRefundDialog.value = false
-}
-
-async function handleRefund() {
-  if (payment.value) {
-    try {
-      await store.dispatch('payments/updatePayment', { id: payment.value.id, paymentData: { status: PaymentStatus.REFUNDED } })
-      showRefundDialog.value = false
-    } catch (error) {
-      console.error('Failed to refund payment:', error)
-    }
-  }
 }
 
 function confirmCancel() {

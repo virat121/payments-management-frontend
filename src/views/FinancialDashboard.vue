@@ -161,7 +161,7 @@
                 </span>
               </div>
               <span class="text-sm font-bold text-gray-900">
-                {{ formatCurrency(amount, Currency.USD) }}
+                {{ formatCurrency(amount, 'USD' as Currency) }}
               </span>
             </div>
           </div>
@@ -186,7 +186,7 @@
                 </span>
               </div>
               <span class="text-sm font-bold text-gray-900">
-                {{ formatCurrency(amount, Currency.USD) }}
+                {{ formatCurrency(amount, 'USD' as Currency) }}
               </span>
             </div>
           </div>
@@ -271,6 +271,7 @@ import { Currency } from '@/types'
 import BaseCard from '@/components/BaseCard.vue'
 import Select from '@/components/Select.vue'
 import currencyService from '@/services/currencyService'
+import { formatLargeCurrency } from '@/utils/currency'
 import {
   ArrowUpIcon,
   ArrowDownIcon,
@@ -325,30 +326,7 @@ const highValuePayments = computed(() => {
 
 // Helper functions
 function formatCurrency(amount: number, currency: Currency): string {
-  // Format large numbers with K, M, B suffixes for better readability
-  const formatLargeNumber = (num: number): string => {
-    const absNum = Math.abs(num)
-    
-    if (absNum >= 1e9) {
-      return (num / 1e9).toFixed(1) + 'B'
-    } else if (absNum >= 1e6) {
-      return (num / 1e6).toFixed(1) + 'M'
-    } else if (absNum >= 1e3) {
-      return (num / 1e3).toFixed(1) + 'K'
-    } else if (absNum >= 1) {
-      return num.toFixed(0)
-    } else {
-      return num.toFixed(2)
-    }
-  }
-
-  const formattedAmount = formatLargeNumber(amount)
-  const symbol = currency === Currency.USD ? '$' : 
-                 currency === Currency.EUR ? '€' : 
-                 currency === Currency.GBP ? '£' : 
-                 currency === Currency.INR ? '₹' : '$'
-  
-  return `${symbol}${formattedAmount}`
+  return formatLargeCurrency(amount, currency)
 }
 
 function formatCategory(category: string): string {

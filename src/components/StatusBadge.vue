@@ -1,13 +1,14 @@
 <template>
   <span
     :class="[
-      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200',
+      'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200',
+      'border border-opacity-20 shadow-sm hover:shadow-md',
       badgeClasses
     ]"
   >
     <span
       :class="[
-        'w-1.5 h-1.5 rounded-full mr-1.5',
+        'w-2 h-2 rounded-full mr-2 animate-pulse-soft',
         dotClasses
       ]"
     ></span>
@@ -21,55 +22,59 @@ import { computed } from 'vue'
 interface Props {
   status: string
   type?: 'payment' | 'user'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: 'payment'
+  type: 'payment',
+  size: 'md'
 })
 
 const badgeClasses = computed(() => {
+  const baseClasses = 'font-medium'
+  
   if (props.type === 'user') {
     return props.status === 'active'
-      ? 'bg-green-100 text-green-800'
-      : 'bg-gray-100 text-gray-800'
+      ? 'bg-success-50 text-success-700 border-success-200'
+      : 'bg-gray-50 text-gray-600 border-gray-200'
   }
 
-  // Payment status classes
+  // Payment status classes with new color scheme
   switch (props.status) {
     case 'completed':
-      return 'bg-green-100 text-green-800'
+      return 'bg-success-50 text-success-700 border-success-200 shadow-glow-success'
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-warning-50 text-warning-700 border-warning-200 shadow-glow-warning'
     case 'failed':
-      return 'bg-red-100 text-red-800'
+      return 'bg-error-50 text-error-700 border-error-200 shadow-glow-error'
     case 'cancelled':
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-gray-50 text-gray-600 border-gray-200'
     case 'refunded':
-      return 'bg-purple-100 text-purple-800'
+      return 'bg-accent-50 text-accent-700 border-accent-200'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-gray-50 text-gray-600 border-gray-200'
   }
 })
 
 const dotClasses = computed(() => {
   if (props.type === 'user') {
     return props.status === 'active'
-      ? 'bg-green-400'
+      ? 'bg-success-500'
       : 'bg-gray-400'
   }
 
-  // Payment status dot classes
+  // Payment status dot classes with new colors
   switch (props.status) {
     case 'completed':
-      return 'bg-green-400'
+      return 'bg-success-500'
     case 'pending':
-      return 'bg-yellow-400'
+      return 'bg-warning-500'
     case 'failed':
-      return 'bg-red-400'
+      return 'bg-error-500'
     case 'cancelled':
       return 'bg-gray-400'
     case 'refunded':
-      return 'bg-purple-400'
+      return 'bg-accent-500'
     default:
       return 'bg-gray-400'
   }
